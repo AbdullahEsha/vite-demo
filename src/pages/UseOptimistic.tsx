@@ -1,4 +1,5 @@
-import { useState, useTransition, useOptimistic } from "react";
+import { useState, useTransition, useOptimistic, use, Suspense } from "react";
+import { ThemeContext } from "../context/ContextAndUseProvider";
 
 type Todo = {
   id: string;
@@ -47,8 +48,23 @@ function TodoList() {
     }
   };
 
+  const themePromise = use(ThemeContext);
+  const theme = use(themePromise);
+
   return (
     <div className="p-4 max-w-md mx-auto">
+      <Suspense
+        fallback={<div className="animate-pulse">Loading theme...</div>}
+      >
+        <h1 className="text-2xl mb-4">Theme Settings Test</h1>
+        <div className="space-y-2">
+          <h2>Current Color: {theme.color}</h2>
+          <h2>Current Font Size: {theme.fontSize}</h2>
+        </div>
+      </Suspense>
+
+      <hr className="my-4" />
+
       <h1 className="text-xl font-bold mb-4">Todo List</h1>
 
       <ul className="mb-4 space-y-2">
@@ -66,11 +82,15 @@ function TodoList() {
         ))}
       </ul>
 
-      <button onClick={handleAddTodo} disabled={isAdding} className="px-4 py-2">
+      <button
+        onClick={handleAddTodo}
+        disabled={isAdding}
+        className="px-4 py-2 bg-blue-500 text-white rounded"
+      >
         {isAdding ? "Adding Todo..." : "Add Todo"}
       </button>
 
-      <p className="mt-2 text-sm text-gray-500">
+      <p className="mt-2 text-sm text-gray-500 animate-pulse">
         {isAdding && "Processing your request... (takes 5 seconds)"}
       </p>
     </div>

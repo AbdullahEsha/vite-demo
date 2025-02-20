@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import {FC} from "react";
+import { FC } from "react";
 
 const Home: FC = () => {
   return (
@@ -10,7 +10,9 @@ const Home: FC = () => {
       <br />
       <Link to="/use-form-status">Use Form Status</Link>
       <br />
-      <Link to="/use-optimistic">Use Optimistic</Link>
+      <Link to="/use-optimistic">Use Optimistic && Use Transition</Link>
+      <br />
+      <Link to="/context-and-use">Context and Use</Link>
     </>
   );
 };
