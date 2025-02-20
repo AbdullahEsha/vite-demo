@@ -24,8 +24,18 @@ const UseActionState: FC = () => {
       <form>
         {state}
         <br />
-        <input type="text" name="text" value={state} />
-        <button type="submit" formAction={formAction}>
+        <input
+          type="text"
+          name="text"
+          defaultValue={state.toString()}
+          className="mr-2 border border-gray-300"
+        />
+        <button
+          type="submit"
+          formAction={formAction}
+          disabled={isPending}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
           {isPending ? "Loading..." : "Submit"}
         </button>
       </form>

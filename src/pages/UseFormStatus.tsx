@@ -16,6 +16,7 @@ const recordInput = (previousState: previousState, formData: formData) => {
   console.log(formData.get("message"));
   return previousState;
 };
+
 const UseFormStatus: FC = () => {
   // The useFormState Hook will return the form data
   const [data, formAction] = useFormState(recordInput, {
@@ -31,14 +32,16 @@ const UseFormStatus: FC = () => {
   return (
     <>
       <h1>Use Form Status Example</h1>
-      <form action={formAction}>
+      <form action={formAction} className="flex flex-col gap-3 mb-4">
         {/*The input with the name 'userName' will be recorded by the useFormState Hook*/}
-        <input name="userName" />
-        <br />
+        <input name="userName" className="mr-2 border border-gray-300" />
         {/*The input with the name 'message' will be recorded by the useFormState Hook*/}
-        <input name="message" />
-
-        <input type="submit" />
+        <input name="message" className="mr-2 border border-gray-300" />
+        {/*The submit button will trigger the formAction function*/}
+        <input
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        />
       </form>
     </>
   );
