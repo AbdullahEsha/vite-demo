@@ -1,4 +1,4 @@
-import { use, Suspense, /*useEffect*/ } from "react";
+import { use, Suspense /*useEffect*/ } from "react";
 import { ThemeContext, updateTheme } from "../context/ContextAndUseProvider";
 import { Link } from "react-router-dom";
 
@@ -33,7 +33,7 @@ const ThemeContent = () => {
     updateTheme(newTheme);
   };
 
-  console.log("Title data", data);
+  console.log("Data Fetched", data);
 
   // useEffect(() => {
   //   // Fetch the data
@@ -55,7 +55,7 @@ const ThemeContent = () => {
         onClick={handleUpdateTheme}
         className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        Toggle Theme
+        Update Theme
       </button>
       <br />
       <br />
