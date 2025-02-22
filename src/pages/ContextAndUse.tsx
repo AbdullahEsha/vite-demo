@@ -1,6 +1,9 @@
 import { use, Suspense /*useEffect*/ } from "react";
 import { ThemeContext, updateTheme } from "../context/ContextAndUseProvider";
 import { Link } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 // Create a promise for the data fetch
 interface Todo {
@@ -35,41 +38,49 @@ const ThemeContent = () => {
 
   console.log("Data Fetched", data);
 
-  // useEffect(() => {
-  //   // Fetch the data
-  //   dataPromise.then((data) => {
-  //     console.log("Fetched data", data);
-  //   });
-  // }, []);
-
   return (
-    <div className="p-4">
-      <h1 className="text-2xl mb-4">Theme Settings</h1>
-      <div className="space-y-2">
-        <h2>Current Color: {theme.color}</h2>
-        <h2>Current Font Size: {theme.fontSize}</h2>
-        <h2 className="text-red-600">Fetched Data Title: {data.title}</h2>
-      </div>
+    <Box sx={{ p: 4 }}>
+      <Typography variant="h4" sx={{ mb: 2 }}>
+        Theme Settings
+      </Typography>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+        <Typography variant="body1">Current Color: {theme.color}</Typography>
+        <Typography variant="body1">
+          Current Font Size: {theme.fontSize}
+        </Typography>
+        <Typography variant="body1" sx={{ color: "error.main" }}>
+          Fetched Data Title: {data.title}
+        </Typography>
+      </Box>
 
-      <button
+      <Button
         onClick={handleUpdateTheme}
-        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        variant="contained"
+        sx={{ mt: 2, bgcolor: "primary.main", color: "white" }}
       >
         Update Theme
-      </button>
+      </Button>
       <br />
       <br />
-      <Link to="/use-optimistic" className="text-blue-500">
-        Go to Use Optimistic
+      <Link to="/use-optimistic" style={{ textDecoration: "none" }}>
+        <Typography variant="body1" sx={{ color: "primary.main" }}>
+          Go to Use Optimistic
+        </Typography>
       </Link>
-    </div>
+    </Box>
   );
 };
 
 const ContextAndUse = () => {
   return (
     <Suspense
-      fallback={<div className="p-4 animate-pulse">Loading theme...</div>}
+      fallback={
+        <Box sx={{ p: 4 }}>
+          <Typography variant="body1" className="animate-pulse">
+            Loading theme...
+          </Typography>
+        </Box>
+      }
     >
       <ThemeContent />
     </Suspense>

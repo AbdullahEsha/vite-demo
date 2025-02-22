@@ -1,5 +1,11 @@
 import { useState, useTransition, useOptimistic, use, Suspense } from "react";
 import { ThemeContext } from "../context/ContextAndUseProvider";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 
 type Todo = {
   id: string;
@@ -52,48 +58,75 @@ function TodoList() {
   const theme = use(themePromise);
 
   return (
-    <div className="p-4 max-w-md mx-auto">
+    <Box sx={{ p: 4, maxWidth: "md", mx: "auto" }}>
       <Suspense
-        fallback={<div className="animate-pulse">Loading theme...</div>}
+        fallback={
+          <Typography variant="body1" className="animate-pulse">
+            Loading theme...
+          </Typography>
+        }
       >
-        <h1 className="text-2xl mb-4">Theme Settings Test</h1>
-        <div className="space-y-2">
-          <h2>Current Color: {theme.color}</h2>
-          <h2>Current Font Size: {theme.fontSize}</h2>
-        </div>
+        <Typography variant="h4" sx={{ mb: 2 }}>
+          Theme Settings Test
+        </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <Typography variant="body1">Current Color: {theme.color}</Typography>
+          <Typography variant="body1">
+            Current Font Size: {theme.fontSize}
+          </Typography>
+        </Box>
       </Suspense>
-
       <hr className="my-4" />
-
-      <h1 className="text-xl font-bold mb-4">Todo List</h1>
-
-      <ul className="mb-4 space-y-2">
+      <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+        Todo List
+      </Typography>
+      <List sx={{ mb: 2, display: "flex", flexDirection: "column", gap: 1 }}>
         {optimisticTodos.map((todo) => (
-          <li
+          <ListItem
             key={todo.id}
-            className={`p-2 border rounded ${isPending ? "opacity-50" : ""}`}
+            sx={{
+              p: 1,
+              border: "1px solid",
+              borderRadius: 1,
+              opacity: isPending ? 0.5 : 1,
+            }}
           >
-            {todo.text}
+            <ListItemText primary={todo.text} />
             {todo.id === optimisticTodos[optimisticTodos.length - 1]?.id &&
               isPending && (
-                <span className="ml-2 text-gray-500 italic">(adding...)</span>
+                <Typography
+                  variant="body2"
+                  sx={{ ml: 1, color: "text.secondary", fontStyle: "italic" }}
+                >
+                  (adding...)
+                </Typography>
               )}
-          </li>
+          </ListItem>
         ))}
-      </ul>
+      </List>
 
-      <button
+      <Button
         onClick={handleAddTodo}
         disabled={isAdding}
-        className="px-4 py-2 bg-blue-500 text-white rounded"
+        variant="contained"
+        sx={{
+          px: 2,
+          py: 1,
+          bgcolor: "primary.main",
+          color: "white",
+          borderRadius: 1,
+        }}
       >
         {isAdding ? "Adding Todo..." : "Add Todo"}
-      </button>
+      </Button>
 
-      <p className="mt-2 text-sm text-gray-500 animate-pulse">
+      <Typography
+        variant="body2"
+        sx={{ mt: 1, color: "text.secondary", animation: "pulse 1s infinite" }}
+      >
         {isAdding && "Processing your request... (takes 5 seconds)"}
-      </p>
-    </div>
+      </Typography>
+    </Box>
   );
 }
 
