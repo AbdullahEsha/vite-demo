@@ -1,20 +1,25 @@
 import { useEffect, FC } from "react";
 import { useFormState } from "react-dom";
+import { Typography, TextField, Button, Box } from "@mui/material";
 
-interface previousState {
+interface PreviousState {
   userName: string | null;
   message: string | null;
 }
 
-interface formData {
+interface FormData {
   get: (name: string) => FormDataEntryValue | null;
 }
 
-const recordInput = (previousState: previousState, formData: formData) => {
+const recordInput = (previousState: PreviousState, formData: FormData) => {
   // Do something with the form data
-  console.log(formData.get("userName"));
-  console.log(formData.get("message"));
-  return previousState;
+  console.log("Previous State: ", previousState);
+
+  return {
+    userName: formData.get("userName") as string | null,
+    message: formData.get("message") as string | null,
+    previousState,
+  };
 };
 
 const UseFormStatus: FC = () => {
@@ -22,28 +27,76 @@ const UseFormStatus: FC = () => {
   const [data, formAction] = useFormState(recordInput, {
     userName: null,
     message: null,
+    previousState: { userName: null, message: null },
   });
 
   useEffect(() => {
-    //output the current values entered in the form
+    // Output the current values entered in the form
     console.log("userName 2: ", data.userName);
     console.log("message 2: ", data.message);
   }, [data]);
+
   return (
-    <>
-      <h1>Use Form Status Example</h1>
-      <form action={formAction} className="flex flex-col gap-3 mb-4">
-        {/*The input with the name 'userName' will be recorded by the useFormState Hook*/}
-        <input name="userName" className="mr-2 border border-gray-300" />
-        {/*The input with the name 'message' will be recorded by the useFormState Hook*/}
-        <input name="message" className="mr-2 border border-gray-300" />
-        {/*The submit button will trigger the formAction function*/}
-        <input
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        />
-      </form>
-    </>
+    <Box sx={{ padding: 3 }}>
+      <Typography variant="h1" gutterBottom>
+        Use Form Status Example
+      </Typography>
+
+      {/* Display the current data and previous state */}
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          component="form"
+          action={formAction}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            width: "400px",
+          }}
+        >
+          {/* The input with the name 'userName' will be recorded by the useFormState Hook */}
+          <TextField name="userName" label="User Name" fullWidth />
+          {/* The input with the name 'message' will be recorded by the useFormState Hook */}
+          <TextField
+            name="message"
+            label="Message"
+            fullWidth
+            multiline
+            rows={4}
+          />
+          {/* The submit button will trigger the formAction function */}
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+        </Box>
+        <Box sx={{ marginBottom: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            Current Data:
+          </Typography>
+          <Typography variant="body1">
+            <strong>Username:</strong> {data.userName || "Not provided"}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Message:</strong> {data.message || "Not provided"}
+          </Typography>
+        </Box>
+        <Box sx={{ marginBottom: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            Previous State:
+          </Typography>
+          <Typography variant="body1">
+            <strong>Username:</strong>{" "}
+            {data.previousState.userName || "Not provided"}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Message:</strong>{" "}
+            {data.previousState.message || "Not provided"}
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Form to submit new data */}
+    </Box>
   );
 };
 

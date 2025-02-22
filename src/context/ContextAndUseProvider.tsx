@@ -1,5 +1,6 @@
 // ContextAndUseProvider.tsx
 import { ReactNode, createContext, useState } from "react";
+import { Suspense } from "react";
 
 type Theme = {
   color: string;
@@ -14,7 +15,11 @@ export const ThemeContext = createContext<Promise<Theme>>(
 // Create a promise that we can resolve externally
 let currentTheme: Theme = { color: "dark", fontSize: "16px" };
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+export const ContextAndUseProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [themePromise, setThemePromise] = useState(
     () =>
       new Promise<Theme>((resolve) => {
@@ -23,7 +28,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   );
 
   // Expose updateTheme through a ref so it's stable across renders
-  ThemeProvider.updateTheme = (newTheme?: Theme): Promise<void> => {
+  ContextAndUseProvider.updateTheme = (newTheme?: Theme): Promise<void> => {
     return new Promise<void>((resolve) => {
       currentTheme = newTheme ?? currentTheme;
       setThemePromise(Promise.resolve(newTheme ?? currentTheme));
@@ -34,16 +39,18 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <ThemeContext.Provider value={themePromise}>
-      {children}
+      <Suspense fallback={<div>Loading theme...</div>}>
+        {children}
+      </Suspense>
     </ThemeContext.Provider>
   );
 };
 
-// Add updateTheme to the ThemeProvider type
-ThemeProvider.updateTheme = (newTheme?: Theme): Promise<void> => {
+// Add updateTheme to the ContextAndUseProvider type
+ContextAndUseProvider.updateTheme = (newTheme?: Theme): Promise<void> => {
   console.warn("Theme provider not mounted yet");
 
-  // Return a promise that resolves when the ThemeProvider mounts
+  // Return a promise that resolves when the ContextAndUseProvider mounts
   return new Promise<void>((resolve) => {
     if (newTheme) {
       currentTheme = newTheme;
@@ -59,5 +66,5 @@ ThemeProvider.updateTheme = (newTheme?: Theme): Promise<void> => {
 
 // Export updateTheme function
 export const updateTheme = (newTheme: Theme) => {
-  ThemeProvider.updateTheme(newTheme);
+  ContextAndUseProvider.updateTheme(newTheme);
 };

@@ -1,7 +1,6 @@
 // App.tsx
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Suspense } from "react";
 import {
   Home,
   UseActionState,
@@ -9,14 +8,14 @@ import {
   UseOptimistic,
   ContextAndUse,
 } from "./pages";
-import { ThemeProvider } from "./context/ContextAndUseProvider";
+import { ContextAndUseProvider } from "./context/ContextAndUseProvider";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
 
 function App() {
   return (
-    <Suspense
-      fallback={<div className="animate-pulse">Loading application...</div>}
-    >
-      <ThemeProvider>
+    <ThemeProvider theme={theme}>
+      <ContextAndUseProvider>
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -26,8 +25,8 @@ function App() {
             <Route path="/context-and-use" element={<ContextAndUse />} />
           </Routes>
         </Router>
-      </ThemeProvider>
-    </Suspense>
+      </ContextAndUseProvider>
+    </ThemeProvider>
   );
 }
 

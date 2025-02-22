@@ -1,45 +1,72 @@
-import { FC, useActionState, useTransition } from "react";
+import { FC, useTransition, useActionState, FormEvent } from "react";
+import {
+  Typography,
+  TextField,
+  Button,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
 async function actionFunction(previousState: number, formData: FormData) {
-  // Do something with the form data
-  console.log(formData.get("text"));
-
   // Simulate an async action (e.g., API call)
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 5000)); // 5-second delay
+
+  const text = (formData.get("text") as string) || "1";
 
   // Return the new state
-  return previousState + 1;
+  return previousState + parseInt(text);
 }
 
 const initialState = 0;
 
 const UseActionState: FC = () => {
-  const [isPending] = useTransition();
-
+  const [isPending, startTransition] = useTransition(); // Properly use useTransition
   const [state, formAction] = useActionState(actionFunction, initialState);
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(event.currentTarget);
+
+    // Wrap the formAction call in startTransition
+    startTransition(() => {
+      formAction(formData); // Call the action function
+    });
+  };
+
   return (
-    <>
-      <h1>Use Action State Example</h1>
-      <form>
-        {state}
-        <br />
-        <input
-          type="text"
+    <Box sx={{ padding: 3 }}>
+      <Typography variant="h1" gutterBottom>
+        Use Action State Example
+      </Typography>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          maxWidth: "400px",
+        }}
+      >
+        <Typography variant="body1">Current State: {state}</Typography>
+        <TextField
           name="text"
+          label="Enter Text"
           defaultValue={state.toString()}
-          className="mr-2 border border-gray-300"
+          fullWidth
         />
-        <button
+        <Button
           type="submit"
-          formAction={formAction}
           disabled={isPending}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          variant="contained"
+          color="primary"
+          startIcon={isPending ? <CircularProgress size={20} /> : null}
         >
           {isPending ? "Loading..." : "Submit"}
-        </button>
-      </form>
-    </>
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
